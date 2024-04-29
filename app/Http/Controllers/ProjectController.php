@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
@@ -21,15 +22,29 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('project.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validated();
+
+            $user = $request->user();
+
+            $project = new Project($validated);
+
+            $project->saveOrFail();
+
+            $project->users()->attach($user->id);
+
+            return redirect('dashboard', 201);
+        } catch (\Exception $th) {
+            return redirect('project/create')->withErrors($th->getMessage())->withInput();
+        }
     }
 
     /**
