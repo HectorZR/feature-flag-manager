@@ -11,16 +11,17 @@
         <x-card>
             <form action="{{ route('project.store') }}" method="post" class="grid grid-cols-1 gap-4">
                 @csrf
-                <x-text-input name='name' placeholder="{{ __('Project name') }}" />
+                <x-input-label for="name" :value="__('Project name')" />
+                <x-text-input id="name" name="name" />
 
                 @if ($errors->any())
                     <x-input-error :messages="$errors->get('name')" />
                 @endif
 
                 <div class="flex justify-end gap-4">
-                    <x-secondary-button>
+                    <x-button-link href="{{ route('dashboard') }}">
                         {{ __('Cancel') }}
-                    </x-secondary-button>
+                    </x-button-link>
 
                     <x-primary-button>
                         {{ __('Save') }}

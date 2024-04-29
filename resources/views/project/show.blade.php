@@ -16,14 +16,14 @@
             <div class="flex gap-4 mt-4">
                 {{-- <x-button-link :href="route('project.edit', $project)">
                     {{ __('Edit') }}
-                </x-button-link>
-                <form action="{{ route('project.destroy', $project) }}" method="post">
+                </x-button-link> --}}
+                <form action="{{ route('project.destroy', $project) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <x-secondary-button>
+                    <x-secondary-button type="submit" class="!bg-red-600 text-white">
                         {{ __('Delete') }}
                     </x-secondary-button>
-                </form> --}}
+                </form>
             </div>
         </x-card>
 

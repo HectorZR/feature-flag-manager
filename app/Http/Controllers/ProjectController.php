@@ -61,7 +61,11 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         try {
-            $project = Project::query()->findOrFail($project->id);
+            $project = Project::query()->find($project->id);
+
+            if (!$project->exists()) {
+                return redirect('dashboard');
+            }
 
             return view('project.show', ['project' => $project]);
         } catch (\Exception $th) {
@@ -90,6 +94,17 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        try {
+            $project = Project::query()->findOrFail($project->id);
+
+            $project->users()->detach();
+
+            $project->delete();
+
+            return redirect('dashboard');
+        } catch (\Exception $th) {
+            ddd($th);
+            return redirect()->withErrors($th->getMessage());
+        }
     }
 }
