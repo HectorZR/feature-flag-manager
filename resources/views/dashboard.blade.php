@@ -26,10 +26,10 @@
                                     <div class="flex justify-between">
                                         <h3 class="font-semibold text-lg">{{ $project->name }}</h3>
                                         <div class="flex gap-4">
-                                            {{-- <x-button-link :href="route('project.show', $project)">
+                                            <x-button-link :href="route('project.show', $project)">
                                                 {{ __('View') }}
                                             </x-button-link>
-                                            <x-button-link :href="route('project.edit', $project)">
+                                            {{-- <x-button-link :href="route('project.edit', $project)">
                                                 {{ __('Edit') }}
                                             </x-button-link> --}}
                                         </div>

@@ -60,7 +60,13 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        try {
+            $project = Project::query()->findOrFail($project->id);
+
+            return view('project.show', ['project' => $project]);
+        } catch (\Exception $th) {
+            return redirect('dashboard');
+        }
     }
 
     /**

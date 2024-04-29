@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(ProjectController::class)->prefix('project')->group(function () {
         Route::get('/create', 'create')->name('project.create');
         Route::post('/create', 'store')->name('project.store');
+        Route::get('/{project}', 'show')->name('project.show');
     });
 });
 
