@@ -16,8 +16,11 @@ class EnvironmentFactory extends Factory
      */
     public function definition(): array
     {
+        $envs = ['production', 'staging', 'testing', 'development'];
+
         return [
-            //
+            'name' => $this->faker->randomElement($envs),
+            'description' => $this->faker->sentence(),
         ];
     }
 }

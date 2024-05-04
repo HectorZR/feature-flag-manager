@@ -48,6 +48,6 @@ class User extends Authenticatable
 
     public function projects()
     {
-        return $this->hasMany(Project::class, 'users_projects');
+        return $this->belongsToMany(Project::class, 'users_projects', 'user_id', 'project_id');
     }
 }

@@ -17,7 +17,9 @@ class FeatureFlagFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'version' => $this->faker->word(),
+            'release_date' => $this->faker->date(),
+            'is_active' => $this->faker->boolean(),
         ];
     }
 }

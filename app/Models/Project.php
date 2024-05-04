@@ -15,4 +15,9 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'users_projects');
     }
+
+    public function environments()
+    {
+        return $this->hasMany(Environment::class);
+    }
 }
