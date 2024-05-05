@@ -26,7 +26,7 @@
             <x-text class="text-xl font-semibold">Feature flags</x-text>
             @foreach ($environment->featureFlags as $featureFlag)
                 <x-card>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <div class="grid grid-cols-1">
                             <x-text as="h3" class="text-lg capitalize">
                                 {{ $featureFlag->version }}

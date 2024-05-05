@@ -113,8 +113,26 @@ class FeatureFlagController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FeatureFlag $featureFlag)
+    public function destroy(Project $project, Environment $environment, FeatureFlag $featureFlag)
     {
-        //
+        try {
+            DB::beginTransaction();
+            Project::findOrFail($project->id);
+            Environment::findOrFail($environment->id);
+            FeatureFlag::findOrFail($featureFlag->id);
+
+            $featureFlag->delete();
+
+            $environment->refresh();
+
+            $response = redirect()->route('project.environment.show', [$project, $environment]);
+
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'An error occurred while deleting the feature flag.')->withErrors($e->getMessage());
+        }
     }
 }
