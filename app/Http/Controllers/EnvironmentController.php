@@ -65,9 +65,18 @@ class EnvironmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Environment $environment)
+    public function show(Project $project, Environment $environment)
     {
-        //
+        try {
+            Project::findOrFail($project->id);
+            $validatedEnvironment = Environment::findOrFail($environment->id);
+
+            $validatedEnvironment->load('featureFlags');
+
+            return view('environment.show', ['project' => $project, 'environment' => $validatedEnvironment]);
+        } catch (\Exception $th) {
+            return back()->withErrors($th->getMessage());
+        }
     }
 
     /**
