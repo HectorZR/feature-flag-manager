@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreFeatureFlagRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreFeatureFlagRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,9 @@ class StoreFeatureFlagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'version' => ['required', 'string', 'max:255'],
+            'release_date' => ['required', 'date', 'after_or_equal:today'],
+            'is_active' => ['nullable', 'in:on'],
         ];
     }
 }

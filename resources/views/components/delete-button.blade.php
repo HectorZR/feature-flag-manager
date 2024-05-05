@@ -3,7 +3,7 @@
 <form action="{{ $route }}" method="POST">
     @csrf
     @method('DELETE')
-    <x-secondary-button type="submit" class="!bg-red-600 text-white">
+    <x-danger-button type="submit">
         {{ __('Delete') }}
-    </x-secondary-button>
+    </x-danger-button>
 </form>

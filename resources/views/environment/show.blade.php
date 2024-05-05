@@ -1,7 +1,11 @@
 <x-app-layout>
-    <x-header-title title="Environment Details" />
+    <x-header-title title="Environment Details">
+        <x-button-link :href="route('project.environment.feature-flag.create', [$project, $environment])">
+            {{ __('Create Feature') }}
+        </x-button-link>
+    </x-header-title>
 
-    <div class="w-full grid grid-cols-2 px-3 pt-3">
+    <div class="w-full grid grid-cols-2 py-6 px-4 sm:px-6 lg:px-8">
         <div>
             <x-text class="text-xl font-semibold">Details</x-text>
             <x-card class="flex justify-between items-center">

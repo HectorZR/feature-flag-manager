@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EnvironmentController;
+use App\Http\Controllers\FeatureFlagController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Redirect;
@@ -23,6 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::resource('project.environment', EnvironmentController::class)->missing(function () {
+        return Redirect::route('dashboard');
+    });
+
+    Route::resource('project.environment.feature-flag', FeatureFlagController::class)->missing(function () {
         return Redirect::route('dashboard');
     });
 });

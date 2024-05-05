@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFeatureFlagRequest;
 use App\Http\Requests\UpdateFeatureFlagRequest;
+use App\Models\Environment;
 use App\Models\FeatureFlag;
+use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class FeatureFlagController extends Controller
 {
@@ -19,17 +22,42 @@ class FeatureFlagController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Project $project, Environment $environment)
     {
-        //
+        return view('feature-flag.create', compact('project', 'environment'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFeatureFlagRequest $request)
+    public function store(StoreFeatureFlagRequest $request, Project $project, Environment $environment)
     {
-        //
+        try {
+            DB::beginTransaction();
+            Project::findOrFail($project->id);
+            Environment::findOrFail($environment->id);
+            $fields = $request->validated();
+
+
+            $featureFlag = new FeatureFlag($fields);
+
+            $featureFlag->environment()->associate($environment);
+
+            $featureFlag->validateUniquenessOnStore();
+
+            $featureFlag->save();
+
+            $environment->refresh();
+
+            $response = redirect()->route('project.environment.show', [$project, $environment]);
+
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'An error occurred while creating the feature flag.')->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
