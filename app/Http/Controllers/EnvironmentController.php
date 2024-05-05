@@ -122,8 +122,25 @@ class EnvironmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Environment $environment)
+    public function destroy(Project $project, Environment $environment)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            Project::findOrFail($project->id);
+            $validatedEnvironment = Environment::findOrFail($environment->id);
+
+            $validatedEnvironment->delete();
+
+            $response = redirect()->route('project.show', $project)->with('success', 'Environment deleted successfully');
+
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $th) {
+            DB::rollBack();
+            dd($th);
+            return back()->withErrors($th->getMessage());
+        }
     }
 }
