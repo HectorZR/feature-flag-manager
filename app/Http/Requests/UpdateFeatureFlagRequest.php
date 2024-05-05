@@ -11,7 +11,7 @@ class UpdateFeatureFlagRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateFeatureFlagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'version' => 'required|string|max:255',
+            'is_active' => 'nullable|in:on,off',
+            'release_date' => 'required|date',
         ];
     }
 }

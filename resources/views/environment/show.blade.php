@@ -31,15 +31,19 @@
                             <x-text as="h3" class="text-lg capitalize">
                                 {{ $featureFlag->version }}
                             </x-text>
-                            <x-text>{{ $featureFlag->releaseDate }}</x-text>
-                            <x-text>{{ $featureFlag->isActive }}</x-text>
+                            <x-text>{{ Illuminate\Support\Carbon::parse($featureFlag->release_date)->format('m-d-Y') }}</x-text>
+                            <x-text>{{ $featureFlag->is_active === true ? 'Active' : 'Inactive' }}</x-text>
                         </div>
 
-                        {{-- <div>
-                            <x-button-link :href="route('project.environment.feature-flag.show', [$project, $environment, $featureFlag])">
-                                {{ __('View') }}
+                        <div>
+                            <x-button-link :href="route('project.environment.feature-flag.edit', [
+                                $project,
+                                $environment,
+                                $featureFlag,
+                            ])">
+                                {{ __('Edit') }}
                             </x-button-link>
-                        </div> --}}
+                        </div>
                     </div>
                 </x-card>
             @endforeach

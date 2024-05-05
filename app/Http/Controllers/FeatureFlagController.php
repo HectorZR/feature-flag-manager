@@ -45,7 +45,7 @@ class FeatureFlagController extends Controller
 
             $featureFlag->validateUniquenessOnStore();
 
-            $featureFlag->save();
+            $featureFlag->saveOrFail();
 
             $environment->refresh();
 
@@ -63,7 +63,7 @@ class FeatureFlagController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FeatureFlag $featureFlag)
+    public function show(Project $project, Environment $environment, FeatureFlag $featureFlag)
     {
         //
     }
@@ -71,17 +71,43 @@ class FeatureFlagController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(FeatureFlag $featureFlag)
+    public function edit(Project $project, Environment $environment, FeatureFlag $featureFlag)
     {
-        //
+        return view('feature-flag.edit', compact('project', 'environment', 'featureFlag'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFeatureFlagRequest $request, FeatureFlag $featureFlag)
+    public function update(UpdateFeatureFlagRequest $request, Project $project, Environment $environment, FeatureFlag $featureFlag)
     {
-        //
+        try {
+            DB::beginTransaction();
+            Project::findOrFail($project->id);
+            Environment::findOrFail($environment->id);
+            $fields = $request->validated();
+
+            if (!isset($fields['is_active'])) {
+                $fields['is_active'] = false;
+            }
+
+            $featureFlag->fill($fields);
+
+            $featureFlag->validateUniquenessOnUpdate();
+
+            $featureFlag->updateOrFail();
+
+            $environment->refresh();
+
+            $response = redirect()->route('project.environment.show', [$project, $environment]);
+
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'An error occurred while updating the feature flag.')->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

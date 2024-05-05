@@ -23,18 +23,28 @@ class FeatureFlag extends Model
         return $this->belongsTo(Environment::class);
     }
 
-    public function validateUniquenessOnStore()
+    public function validateUniqueness(int $minimumAccepted)
     {
         $duplicateFlags = DB::table('feature_flags')
             ->where('environment_id', $this->environment_id)
             ->where('version', $this->version)
             ->groupBy('version', 'id')
-            ->havingRaw('COUNT(*) > 0')
+            ->havingRaw('COUNT(*) > ?', [$minimumAccepted])
             ->get();
 
         if (!$duplicateFlags->isEmpty()) {
             throw new \Exception('Feature flag version must be unique within the environment.');
         }
+    }
+
+    public function validateUniquenessOnStore()
+    {
+        $this->validateUniqueness(0);
+    }
+
+    public function validateUniquenessOnUpdate()
+    {
+        $this->validateUniqueness(1);
     }
 
     protected function isActive(): Attribute
