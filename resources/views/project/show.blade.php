@@ -7,24 +7,21 @@
         </div>
     </x-slot>
 
-    <div class="w-full flex justify-center items-center">
-        <x-card>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ $project->name }}
-            </h2>
-            <div class="flex gap-4 mt-4">
+    <div class="w-full px-9 grid grid-cols-2 gap-4 pt-8">
+        <div class="flex flex-col gap-2">
+            <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200">Details</h1>
+            <x-card class="mt-0 flex justify-between item-center">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    {{ $project->name }}
+                </h2>
+
                 <x-button-link :href="route('project.edit', $project)">
                     {{ __('Edit') }}
                 </x-button-link>
-                <form action="{{ route('project.destroy', $project) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <x-secondary-button type="submit" class="!bg-red-600 text-white">
-                        {{ __('Delete') }}
-                    </x-secondary-button>
-                </form>
-            </div>
-        </x-card>
+            </x-card>
 
+        </div>
+
+        @include('project.partials.environment.show')
     </div>
 </x-app-layout>

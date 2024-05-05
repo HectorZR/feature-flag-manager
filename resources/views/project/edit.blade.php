@@ -11,6 +11,8 @@
         <x-card>
             <x-project-form action="{{ route('project.update', $project) }}" method="PATCH" name="{{ $project->name }}"
                 cancelRoute="{{ route('project.show', $project) }}" />
+
+            @include('project.partials.delete-project')
         </x-card>
     </section>
 </x-app-layout>

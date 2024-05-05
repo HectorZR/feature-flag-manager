@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -16,11 +15,7 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $userId = $request->user()->id;
-
-        $projects = Project::query()->join('users_projects', 'projects.id', '=', 'users_projects.project_id')
-            ->where('users_projects.user_id', $userId)
-            ->get();
+        $projects = $request->user()->projects;
 
         return view('dashboard', ['projects' => $projects]);
     }
@@ -61,7 +56,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         try {
-            $project = Project::query()->findOrFail($project->id);
+            $project = Project::query()->findOrFail($project->id)->load('environments.featureFlags');
 
             return view('project.show', ['project' => $project]);
         } catch (\Exception $th) {
