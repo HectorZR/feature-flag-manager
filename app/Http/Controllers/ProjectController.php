@@ -61,11 +61,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         try {
-            $project = Project::query()->find($project->id);
-
-            if (!$project->exists()) {
-                return redirect('dashboard');
-            }
+            $project = Project::query()->findOrFail($project->id);
 
             return view('project.show', ['project' => $project]);
         } catch (\Exception $th) {
@@ -78,7 +74,13 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        try {
+            $project = Project::query()->findOrFail($project->id);
+
+            return view('project.edit', ['project' => $project]);
+        } catch (\Exception $th) {
+            return redirect('dashboard');
+        }
     }
 
     /**
@@ -86,7 +88,21 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        try {
+            $validated = $request->validated();
+
+            $storedProject = Project::query()->findOrFail($project->id);
+
+            $storedProject->fill($validated);
+
+            $storedProject->saveOrFail();
+
+            return redirect()->route('project.show', ['project' => $project]);
+        } catch (\Exception $th) {
+            return redirect(
+                'project.edit'
+            )->with('project', $project)->withErrors($th->getMessage())->withInput();
+        }
     }
 
     /**

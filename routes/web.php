@@ -20,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/create', 'create')->name('project.create');
         Route::post('/create', 'store')->name('project.store');
         Route::get('/{project}', 'show')->name('project.show');
+        Route::get('/{project}/edit', 'edit')->name('project.edit');
+        Route::patch('{project}/edit', 'update')->name('project.update');
         Route::delete('/{project}', 'destroy')->name('project.destroy');
     });
 });

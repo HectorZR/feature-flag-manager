@@ -12,11 +12,10 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ $project->name }}
             </h2>
-            {{-- <p>{{ $project->description }}</p> --}}
             <div class="flex gap-4 mt-4">
-                {{-- <x-button-link :href="route('project.edit', $project)">
+                <x-button-link :href="route('project.edit', $project)">
                     {{ __('Edit') }}
-                </x-button-link> --}}
+                </x-button-link>
                 <form action="{{ route('project.destroy', $project) }}" method="POST">
                     @csrf
                     @method('DELETE')
