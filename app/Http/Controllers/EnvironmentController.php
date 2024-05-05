@@ -96,9 +96,27 @@ class EnvironmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEnvironmentRequest $request, Environment $environment)
+    public function update(UpdateEnvironmentRequest $request, Project $project, Environment $environment)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            Project::findOrFail($project->id);
+            $validatedEnvironment = Environment::findOrFail($environment->id);
+
+            $fields = $request->validated();
+
+            $validatedEnvironment->update($fields);
+
+            $response = redirect()->route('project.environment.show', [$project, $validatedEnvironment])->with('success', 'Environment updated successfully');
+
+            DB::commit();
+
+            return $response;
+        } catch (\Exception $th) {
+            DB::rollBack();
+            return back()->withErrors($th->getMessage())->withInput();
+        }
     }
 
     /**

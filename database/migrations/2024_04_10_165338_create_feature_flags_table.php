@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('version');
             $table->date('release_date');
             $table->boolean('is_active');
-            $table->foreignId('environment_id')->constrained('environments');
+            $table->foreignId('environment_id')->constrained('environments')->cascadeOnDelete();
             $table->timestamps();
         });
     }

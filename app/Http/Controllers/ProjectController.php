@@ -130,7 +130,7 @@ class ProjectController extends Controller
             return $response;
         } catch (\Exception $th) {
             DB::rollBack();
-            return redirect()->withErrors($th->getMessage());
+            return back()->withErrors($th->getMessage());
         }
     }
 }

@@ -6,7 +6,7 @@
             <x-text class="text-xl font-semibold">Details</x-text>
             <x-card class="flex justify-between items-center">
                 <div class="flex flex-col gap-2">
-                    <x-text as="h2">{{ $environment->name }}</x-text>
+                    <x-text as="h2" class="capitalize">{{ $environment->name }}</x-text>
                     <x-text>{{ $environment->description }}</x-text>
                 </div>
 
