@@ -4,10 +4,16 @@
     <div class="w-full grid grid-cols-2 px-3 pt-3">
         <div>
             <x-text class="text-xl font-semibold">Details</x-text>
-            <x-card>
+            <x-card class="flex justify-between items-center">
                 <div class="flex flex-col gap-2">
                     <x-text as="h2">{{ $environment->name }}</x-text>
                     <x-text>{{ $environment->description }}</x-text>
+                </div>
+
+                <div>
+                    <x-button-link :href="route('project.environment.edit', [$project, $environment])">
+                        {{ __('Edit') }}
+                    </x-button-link>
                 </div>
             </x-card>
         </div>

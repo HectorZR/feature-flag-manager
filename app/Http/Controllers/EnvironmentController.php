@@ -82,9 +82,15 @@ class EnvironmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Environment $environment)
+    public function edit(Project $project, Environment $environment)
     {
-        //
+        try {
+            $validatedEnvironment = Environment::findOrFail($environment->id);
+
+            return view('environment.edit', ['project' => $project, 'environment' => $validatedEnvironment]);
+        } catch (\Exception $th) {
+            return back()->withErrors($th->getMessage());
+        }
     }
 
     /**
