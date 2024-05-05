@@ -13,4 +13,9 @@ class Environment extends Model
     {
         return $this->hasMany(FeatureFlag::class);
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

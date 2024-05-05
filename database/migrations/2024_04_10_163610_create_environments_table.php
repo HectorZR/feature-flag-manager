@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('environments', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('description', 255);
+            $table->string('description', 255)->nullable();
             $table->foreignId('project_id')->constrained('projects');
             $table->timestamps();
         });

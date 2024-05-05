@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,14 +18,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::controller(ProjectController::class)->prefix('project')->group(function () {
-        Route::get('/create', 'create')->name('project.create');
-        Route::post('/create', 'store')->name('project.store');
-        Route::get('/{project}', 'show')->name('project.show');
-        Route::get('/{project}/edit', 'edit')->name('project.edit');
-        Route::patch('{project}/edit', 'update')->name('project.update');
-        Route::delete('/{project}', 'destroy')->name('project.destroy');
+    Route::resource('project', ProjectController::class)->except(['index'])->missing(function () {
+        return Redirect::route('dashboard');
     });
+
+    Route::resource('project.environment', EnvironmentController::class);
 });
 
 require __DIR__ . '/auth.php';
