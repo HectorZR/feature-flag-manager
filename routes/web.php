@@ -22,7 +22,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Redirect::route('dashboard');
     });
 
-    Route::resource('project.environment', EnvironmentController::class);
+    Route::resource('project.environment', EnvironmentController::class)->missing(function () {
+        return Redirect::route('dashboard');
+    });
 });
 
 require __DIR__ . '/auth.php';

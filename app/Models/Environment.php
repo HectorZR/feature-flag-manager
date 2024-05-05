@@ -9,6 +9,8 @@ class Environment extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'description'];
+
     public function featureFlags()
     {
         return $this->hasMany(FeatureFlag::class);

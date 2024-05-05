@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -34,6 +35,7 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request): RedirectResponse
     {
         try {
+            DB::beginTransaction();
             $validated = $request->validated();
 
             $user = $request->user();
@@ -44,8 +46,12 @@ class ProjectController extends Controller
 
             $project->users()->attach($user->id);
 
-            return redirect('dashboard', 201);
+            $response = redirect('dashboard', 201);
+
+            DB::commit();
+            return $response;
         } catch (\Exception $th) {
+            DB::rollBack();
             return redirect('project/create')->withErrors($th->getMessage())->withInput();
         }
     }
@@ -84,6 +90,8 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
         try {
+            DB::beginTransaction();
+
             $validated = $request->validated();
 
             $storedProject = Project::query()->findOrFail($project->id);
@@ -92,9 +100,13 @@ class ProjectController extends Controller
 
             $storedProject->saveOrFail();
 
-            return redirect()->route('project.show', ['project' => $project]);
+            $response = redirect()->route('project.show', ['project' => $project]);
+
+            DB::commit();
+            return $response;
         } catch (\Exception $th) {
-            return redirect(
+            DB::rollBack();
+            return redirect()->route(
                 'project.edit'
             )->with('project', $project)->withErrors($th->getMessage())->withInput();
         }
@@ -106,15 +118,18 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         try {
+            DB::beginTransaction();
             $project = Project::query()->findOrFail($project->id);
 
             $project->users()->detach();
 
             $project->delete();
 
-            return redirect('dashboard');
+            $response = redirect('dashboard');
+            DB::commit();
+            return $response;
         } catch (\Exception $th) {
-            ddd($th);
+            DB::rollBack();
             return redirect()->withErrors($th->getMessage());
         }
     }
